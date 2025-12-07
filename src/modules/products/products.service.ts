@@ -14,9 +14,18 @@ export class ProductsService {
     private readonly filesService: FilesService
   ) {}
 
-  async create(dto: CreateProductDto): Promise<Product> {
+  async create(dto: CreateProductDto, images: Express.Multer.File[]): Promise<Product> {
     this.logger.log('Creating new product');
-    return this.repository.create(dto);
+    
+    const imagePaths = await this.filesService.saveFiles(images);
+    
+    const productData = {
+      title: dto.title,
+      description: dto.description,
+      images: imagePaths,
+    };
+    
+    return this.repository.create(productData as any);
   }
 
   async findAll(): Promise<Product[]> {
@@ -31,18 +40,25 @@ export class ProductsService {
     return entity;
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<Product> {
+  async update(id: string, dto: UpdateProductDto, images?: Express.Multer.File[]): Promise<Product> {
     const existing = await this.findOne(id);
 
-    // Delete old images if new ones provided
-    if (dto.images && Array.isArray(dto.images) && dto.images.length > 0) {
-      const imagesToDelete = existing.images.filter(img => !dto.images!.includes(img));
-      if (imagesToDelete.length > 0) {
-        await this.filesService.deleteFiles(imagesToDelete);
+    let imagePaths = existing.images;
+    
+    // If new images provided, delete old ones and save new
+    if (images && images.length > 0) {
+      if (existing.images && existing.images.length > 0) {
+        await this.filesService.deleteFiles(existing.images);
       }
+      imagePaths = await this.filesService.saveFiles(images);
     }
 
-    const updated = await this.repository.update(id, dto);
+    const updateData: any = {
+      ...dto,
+      images: imagePaths,
+    };
+
+    const updated = await this.repository.update(id, updateData);
     if (!updated) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }

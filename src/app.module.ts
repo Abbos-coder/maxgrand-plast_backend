@@ -9,6 +9,7 @@ import { HeroSectionModule } from './modules/hero-section/hero-section.module';
 import { AboutSectionModule } from './modules/about-section/about-section.module';
 import { ProductsModule } from './modules/products/products.module';
 import { PartnersModule } from './modules/partners/partners.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
 import { FilesModule } from './modules/files/files.module';
 
 @Module({
@@ -26,6 +27,7 @@ import { FilesModule } from './modules/files/files.module';
     AboutSectionModule,
     ProductsModule,
     PartnersModule,
+    ContactsModule,
     FilesModule,
   ],
 })
