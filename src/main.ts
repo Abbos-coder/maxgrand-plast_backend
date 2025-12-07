@@ -48,6 +48,7 @@ async function bootstrap() {
       .addTag('About Section', 'About section management')
       .addTag('Products', 'Products management')
       .addTag('Partners', 'Partners management')
+      .addTag('Contacts', 'Contact form submissions management')
       .addTag('Files', 'File upload management')
       .build();
 
