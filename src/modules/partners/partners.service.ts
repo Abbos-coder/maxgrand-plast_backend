@@ -21,7 +21,7 @@ export class PartnersService {
     
     const partnerData = {
       name: dto.name,
-      image: logoPath,
+      logo: logoPath,
     };
     
     const partner = await this.repository.create(partnerData as any);
@@ -44,19 +44,19 @@ export class PartnersService {
   async update(id: string, dto: UpdatePartnerDto, logo?: Express.Multer.File): Promise<Partner> {
     const existing = await this.findOne(id);
 
-    let logoPath = existing.image;
+    let logoPath = existing.logo;
     
     // If new logo provided, delete old one and save new
     if (logo) {
-      if (existing.image) {
-        await this.filesService.deleteFile(existing.image);
+      if (existing.logo) {
+        await this.filesService.deleteFile(existing.logo);
       }
       logoPath = await this.filesService.saveFile(logo);
     }
 
     const updateData: any = {
       ...dto,
-      image: logoPath,
+      logo: logoPath,
     };
 
     const updated = await this.repository.update(id, updateData);
@@ -71,9 +71,9 @@ export class PartnersService {
   async remove(id: string): Promise<void> {
     const entity = await this.findOne(id);
 
-    // Delete associated image
-    if (entity.image) {
-      await this.filesService.deleteFile(entity.image);
+    // Delete associated logo
+    if (entity.logo) {
+      await this.filesService.deleteFile(entity.logo);
     }
 
     const deleted = await this.repository.remove(id);
