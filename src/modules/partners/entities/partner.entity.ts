@@ -15,7 +15,7 @@ export class Partner {
   name: string;
 
   @Column({ type: 'varchar', length: 500 })
-  image: string;
+  logo: string;
 
   @CreateDateColumn()
   createdAt: Date;
